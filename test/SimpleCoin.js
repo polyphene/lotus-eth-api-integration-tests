@@ -53,9 +53,34 @@ describe('SimpleCoin', function () {
     })
   it('Should find the transaction in block tx list', async function () {
     const blockByHash = await ethers.provider.getBlock(deploymentBlockHash)
-    console.log({ blockByHash })
-    const blockByNumber = await ethers.provider.getBlock(deploymentBlockNumber)
-    console.log({ blockByNumber })
+    const blockByNumber = await ethers.provider.getBlock(deploymentBlockNumber);
+
+    [blockByHash, blockByNumber].forEach(bloc => {
+      bloc.should.contain.keys(
+        'parentHash',
+        'sha3Uncles',
+        'miner',
+        'stateRoot',
+        'transactionsRoot',
+        'receiptsRoot',
+        'logsBloom',
+        'number',
+        'gasLimit',
+        'gasUsed',
+        'timestamp',
+        'extraData',
+        'mixHash',
+        'nonce',
+        'size',
+        'transactions',
+        'uncles',
+      )
+      bloc.gasUsed.should.be.gt(0)
+      bloc.transactions.length.should.not.be.empty
+      bloc.transactions.should.contain(deploymentTxHash)
+    })
+
+    blockByHash.should.deep.equal(blockByNumber)
   })
   it('Should get block tx count', async function () {
     const blockTxCountByHash = await ethers.provider.send(
