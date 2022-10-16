@@ -1,4 +1,5 @@
 const { deployments, ethers } = require('hardhat')
+const should = require('chai').should();
 
 let deployerF0Addr, deploymentTxHash, deploymentBlockHash, deploymentBlockNumber
 const otherAddress = '0xff000000000000000000000000000000deadbeef'
@@ -13,7 +14,16 @@ describe('SimpleCoin', function () {
   it('Should access transaction details after it has been mined',
     async function () {
       const txByHash = await ethers.provider.getTransaction(deploymentTxHash)
-      console.log({ txByHash })
+      txByHash.should.contain.keys(
+        'blockHash',
+        'blockNumber',
+        'from',
+        'hash',
+        'transactionIndex',
+      )
+      txByHash.from.should.be.a.properAddress
+      txByHash.from.should.hexEqual(deployerF0Addr)
+      should.not.exist(txByHash.to)
       const {
         blockHash,
         blockNumber,
