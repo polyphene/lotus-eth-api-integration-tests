@@ -85,11 +85,16 @@ describe('SimpleCoin', function () {
   it('Should get block tx count', async function () {
     const blockTxCountByHash = await ethers.provider.send(
       'eth_getBlockTransactionCountByHash', [deploymentBlockHash])
-    console.log(blockTxCountByHash)
     const blockTxCountByNumber = await ethers.provider.send(
       'eth_getBlockTransactionCountByNumber',
-      [ethers.utils.hexlify(deploymentBlockNumber)])
-    console.log(blockTxCountByNumber)
+      [ethers.utils.hexlify(deploymentBlockNumber)]);
+
+    [blockTxCountByHash, blockTxCountByNumber].forEach(blockTxCount => {
+      Number(blockTxCount).should.be.gt(0)
+    })
+
+    blockTxCountByHash.should.be.equal(blockTxCountByNumber)
+
   })
   it('Should interact with the contract using eth_call', async function () {
     const SimpleCoin = await ethers.getContract('SimpleCoin')
