@@ -1,5 +1,5 @@
 const { deployments, ethers } = require('hardhat')
-const should = require('chai').should();
+const should = require('chai').should()
 
 let deployerF0Addr, deploymentTxHash, deploymentBlockHash, deploymentBlockNumber
 const otherAddress = '0xff000000000000000000000000000000deadbeef'
@@ -35,7 +35,21 @@ describe('SimpleCoin', function () {
     async function () {
       const txReceipt = await ethers.provider.getTransactionReceipt(
         deploymentTxHash)
-      console.log({ txReceipt })
+      txReceipt.should.contain.keys(
+        'blockHash',
+        'blockNumber',
+        'from',
+        'cumulativeGasUsed',
+        'gasUsed',
+        'logs',
+        'logsBloom',
+        'transactionHash',
+        'transactionIndex',
+        'effectiveGasPrice',
+      )
+      txReceipt.gasUsed.should.be.gt(0)
+      txReceipt.cumulativeGasUsed.should.be.gt(txReceipt.gasUsed)
+      txReceipt.status.should.equal(1)
     })
   it('Should find the transaction in block tx list', async function () {
     const blockByHash = await ethers.provider.getBlock(deploymentBlockHash)
