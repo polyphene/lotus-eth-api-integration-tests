@@ -49,4 +49,9 @@ describe('SimpleCoin', function () {
     const receiverBalance = await SimpleCoin.getBalance(otherAddress)
     console.log({ receiverBalance })
   })
+  it('Should get the contract byte code at the deployed address', async function () {
+    const SimpleCoin = await ethers.getContract('SimpleCoin')
+    const code = await ethers.provider.getCode(SimpleCoin.address, "latest");
+    console.log({ code })
+  })
 })
