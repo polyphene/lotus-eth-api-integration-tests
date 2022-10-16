@@ -99,9 +99,10 @@ describe('SimpleCoin', function () {
   it('Should interact with the contract using eth_call', async function () {
     const SimpleCoin = await ethers.getContract('SimpleCoin')
     const deployerBalance = await SimpleCoin.getBalance(deployerF0Addr)
-    console.log({ deployerBalance })
     const receiverBalance = await SimpleCoin.getBalance(otherAddress)
-    console.log({ receiverBalance })
+
+    deployerBalance.should.be.equal(10000)
+    receiverBalance.should.be.equal(0)
   })
   it('Should get the contract byte code at the deployed address',
     async function () {
