@@ -12,22 +12,27 @@ module.exports = async ({ deployments }) => {
   // use the deployer private key to compute the Filecoin f1 deployer address
   // and get the right tx nonce
   const deployer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY);
+  const ethAddr = deployer.address
   const pubKey = ethers.utils.arrayify(deployer.publicKey);
-  const f1addr = fa.newSecp256k1Address(pubKey).toString();
+  const f1Addr = fa.newSecp256k1Address(pubKey).toString();
+  let f0Addr
 
   try {
     // check that an actor has been deployed at the deployer address
-    await ethers.provider.send("Filecoin.StateLookupID", [f1addr, []]);
+    let actorId = await ethers.provider.send("Filecoin.StateLookupID", [f1Addr, []]);
+    // format the deployer f0 address
+    actorId = ethers.utils.hexValue(Number(actorId.slice(1)))
+    f0Addr =  ethers.utils.hexConcat(['0xff', ethers.utils.hexZeroPad(actorId, 19)])
   } catch (e) {
-    console.error(`failed to resolve address ${f1addr}. be sure to deploy an actor by sending FIL there`)
+    console.error(`failed to resolve address ${f1Addr}. be sure to deploy an actor by sending FIL there`)
     return
   }
 
-  const nonce = await ethers.provider.send("Filecoin.MpoolGetNonce", [f1addr]);
+  const nonce = await ethers.provider.send("Filecoin.MpoolGetNonce", [f1Addr]);
   const priorityFee = await ethers.provider.send("eth_maxPriorityFeePerGas", [])
 
   await deploy("SimpleCoin", {
-    from: deployer.address,
+    from: ethAddr,
     args: [],
     // since it's difficult to estimate the gas before f4 address is launched, it's safer to manually set
     // a large gasLimit. This should be addressed in the following releases.
@@ -36,6 +41,7 @@ module.exports = async ({ deployments }) => {
     // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
     maxPriorityFeePerGas: priorityFee,
     nonce: nonce,
+    linkedData: {pubKey, ethAddr, f1Addr, f0Addr},
     log: true,
   });
 };
