@@ -107,9 +107,9 @@ describe('SimpleCoin', function () {
   it('Should get the contract byte code at the deployed address',
     async function () {
       const SimpleCoin = await ethers.getContract('SimpleCoin')
-      const code = await ethers.provider.send('eth_getCode',
-        [SimpleCoin.address]) // TODO remove
-      console.log({ code })
+      const code = await ethers.provider.getCode(SimpleCoin.address, "latest");
+      const { deployedBytecode } = await deployments.getArtifact('SimpleCoin')
+      code.should.be.equal(deployedBytecode)
     })
   it('Should get storage using eth_getStorageAt', async function () {
     const SimpleCoin = await ethers.getContract('SimpleCoin')
