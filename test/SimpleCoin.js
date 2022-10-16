@@ -49,11 +49,13 @@ describe('SimpleCoin', function () {
     const receiverBalance = await SimpleCoin.getBalance(otherAddress)
     console.log({ receiverBalance })
   })
-  it('Should get the contract byte code at the deployed address', async function () {
-    const SimpleCoin = await ethers.getContract('SimpleCoin')
-    const code = await ethers.provider.getCode(SimpleCoin.address, "latest");
-    console.log({ code })
-  })
+  it('Should get the contract byte code at the deployed address',
+    async function () {
+      const SimpleCoin = await ethers.getContract('SimpleCoin')
+      const code = await ethers.provider.send('eth_getCode',
+        [SimpleCoin.address]) // TODO remove
+      console.log({ code })
+    })
   it('Should get storage using eth_getStorageAt', async function () {
     const SimpleCoin = await ethers.getContract('SimpleCoin')
     const key = ethers.utils.hexConcat([
