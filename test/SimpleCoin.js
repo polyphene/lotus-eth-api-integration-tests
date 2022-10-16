@@ -1,7 +1,6 @@
 const { deployments, ethers } = require('hardhat')
 
-let deploymentTxHash
-let deployerF0Addr
+let deployerF0Addr, deploymentTxHash, deploymentBlockHash, deploymentBlockNumber
 const otherAddress = '0xff000000000000000000000000000000deadbeef'
 
 describe('SimpleCoin', function () {
@@ -15,12 +14,25 @@ describe('SimpleCoin', function () {
     async function () {
       const txByHash = await ethers.provider.getTransaction(deploymentTxHash)
       console.log({ txByHash })
+      const {
+        blockHash,
+        blockNumber,
+      } = txByHash
+      deploymentBlockHash = blockHash
+      deploymentBlockNumber = blockNumber
     })
   it('Should access transaction receipt after it has been mined',
     async function () {
-      const txReceipt = await ethers.provider.getTransactionReceipt(deploymentTxHash)
+      const txReceipt = await ethers.provider.getTransactionReceipt(
+        deploymentTxHash)
       console.log({ txReceipt })
     })
+  it('Should find the transaction in block tx list', async function () {
+    const blockByHash = await ethers.provider.getBlock(deploymentBlockHash)
+    console.log({ blockByHash })
+    const blockByNumber = await ethers.provider.getBlock(deploymentBlockNumber)
+    console.log({ blockByNumber })
+  })
   it('Should interact with the contract using eth_call', async function () {
     const SimpleCoin = await ethers.getContract('SimpleCoin')
     const deployerBalance = await SimpleCoin.getBalance(deployerF0Addr)
