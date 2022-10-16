@@ -54,4 +54,15 @@ describe('SimpleCoin', function () {
     const code = await ethers.provider.getCode(SimpleCoin.address, "latest");
     console.log({ code })
   })
+  it('Should get storage using eth_getStorageAt', async function () {
+    const SimpleCoin = await ethers.getContract('SimpleCoin')
+    const key = ethers.utils.hexConcat([
+      ethers.utils.hexZeroPad(deployerF0Addr, 32),
+      ethers.utils.hexZeroPad('0x00', 32),
+    ])
+    const position = ethers.utils.keccak256(key)
+    const storage = await ethers.provider.getStorageAt(SimpleCoin.address,
+      position)
+    console.log({ storage })
+  })
 })
