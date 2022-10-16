@@ -12,5 +12,9 @@ module.exports = {
       url: 'http://localhost:1234/rpc/v0',
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
     },
+    'wallaby': {
+      url: 'https://wallaby.node.glif.io/rpc/v0',
+      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
+    },
   },
 }
