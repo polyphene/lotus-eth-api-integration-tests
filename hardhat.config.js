@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: '0.8.15',
@@ -8,6 +10,7 @@ module.exports = {
       httpHeaders: {
         'Content-Type': 'application/json',
       },
+      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
     },
   },
 }
