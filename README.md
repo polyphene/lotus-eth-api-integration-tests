@@ -10,7 +10,8 @@ It takes advantage of the [hardhat](https://hardhat.org) framework.
 By default, the test suite will run locally, expecting a local Lotus network
 and the Ethereum JSON RPC to be accessible on http://localhost:1234/rpc/v0 .
 
-A private key should be set in an `.env` file.
+A private key should be set in an `.env` file, and an actor should have been deployed at the related address.
+Sending some FIL there is enough.
 
 Once properly initialized, you may take full advantage of the power of hardhat
 with the few following commands.
