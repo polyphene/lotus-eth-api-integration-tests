@@ -10,9 +10,6 @@ module.exports = {
   networks: {
     'lotus-local-net': {
       url: 'http://localhost:1234/rpc/v0',
-      httpHeaders: {
-        'Content-Type': 'application/json',
-      },
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
     },
   },
