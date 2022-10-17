@@ -14,6 +14,9 @@ module.exports = {
     },
     'wallaby': {
       url: 'https://wallaby.node.glif.io/rpc/v0',
+      httpHeaders: {
+        'Content-Type': 'application/json',
+      },
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
     },
   },
