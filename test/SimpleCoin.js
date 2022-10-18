@@ -146,24 +146,19 @@ describe('SimpleCoin', function () {
   })
   it('Should get the contract byte code at the deployed address',
     async function () {
-      const SimpleCoin = await ethers.getContractAt('SimpleCoin',
-        simpleCoinAddress)
-      const code = await ethers.provider.getCode(SimpleCoin.address, 'latest')
+      const code = await ethers.provider.getCode(simpleCoinAddress, 'latest')
       const { deployedBytecode } = await artifacts.readArtifact('SimpleCoin')
 
       code.should.be.equal(deployedBytecode)
     })
   it('Should get storage using eth_getStorageAt', async function () {
-    const SimpleCoin = await ethers.getContractAt('SimpleCoin',
-      simpleCoinAddress)
-
     let key = ethers.utils.hexConcat([
       ethers.utils.hexZeroPad(deployerF0Addr, 32),
       ethers.utils.hexZeroPad('0x00', 32),
     ])
     let position = ethers.utils.keccak256(key)
     const storageAtDeployerBalance = await ethers.provider.getStorageAt(
-      SimpleCoin.address,
+      simpleCoinAddress,
       position)
 
     storageAtDeployerBalance.should.be.equal(10000)
@@ -174,7 +169,7 @@ describe('SimpleCoin', function () {
     ])
     position = ethers.utils.keccak256(key)
     const storageAtOtherBalance = await ethers.provider.getStorageAt(
-      SimpleCoin.address,
+      simpleCoinAddress,
       position)
 
     storageAtOtherBalance.should.be.equal(0)
