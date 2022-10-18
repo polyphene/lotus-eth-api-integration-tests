@@ -65,10 +65,15 @@ const testCall = (deployerBalance, receiverBalance) => {
   receiverBalance.should.be.equal(0)
 }
 
+const testGetCode = (code, expectedCode) => {
+  code.should.be.equal(expectedCode)
+}
+
 module.exports = {
   testGetTransactionByHash,
   testGetTransactionReceipt,
   testGetBlock,
   testGetBlockTxCount,
   testCall,
+  testGetCode,
 }

@@ -102,7 +102,7 @@ describe('SimpleCoin', function () {
       const code = await ethers.provider.getCode(SimpleCoin.address, 'latest')
       const { deployedBytecode } = await artifacts.readArtifact('SimpleCoin')
 
-      code.should.be.equal(deployedBytecode)
+      rpcTests.testGetCode(code, deployedBytecode)
     })
   it('Should get storage using eth_getStorageAt', async function () {
     const SimpleCoin = await ethers.getContractAt('SimpleCoin',

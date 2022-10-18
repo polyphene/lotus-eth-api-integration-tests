@@ -2,7 +2,7 @@ require('dotenv').config()
 const { getDeployerF1Address, getDeployerF0Address } = require(
   './utils/getDeployerAddresses')
 const deployContract = require('./utils/deployContract')
-const { web3 } = require('hardhat')
+const { artifacts, web3 } = require('hardhat')
 const { promisify } = require('util')
 const rpcTests = require('../util/testRpcResponses')
 
@@ -69,4 +69,11 @@ describe('SimpleCoin', function () {
 
     rpcTests.testCall(deployerBalance, receiverBalance)
   })
+  it('Should get the contract byte code at the deployed address',
+    async function () {
+      const code = await web3.eth.getCode(simpleCoinAddress, 'latest')
+      const { deployedBytecode } = await artifacts.readArtifact('SimpleCoin')
+
+      rpcTests.testGetCode(code, deployedBytecode)
+    })
 })
