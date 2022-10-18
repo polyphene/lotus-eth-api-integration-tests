@@ -68,21 +68,7 @@ describe('SimpleCoin', function () {
         deploymentTxHash)
       simpleCoinAddress = txReceipt.contractAddress
 
-      txReceipt.should.contain.keys(
-        'blockHash',
-        'blockNumber',
-        'from',
-        'cumulativeGasUsed',
-        'gasUsed',
-        'logs',
-        'logsBloom',
-        'transactionHash',
-        'transactionIndex',
-        'effectiveGasPrice',
-      )
-      txReceipt.gasUsed.should.be.gt(0)
-      txReceipt.cumulativeGasUsed.should.be.gt(txReceipt.gasUsed)
-      txReceipt.status.should.equal(1)
+      rpcTests.testGetTransactionReceipt(txReceipt)
     })
   it('Should find the transaction in block tx list', async function () {
     const blockByHash = await ethers.provider.getBlock(deploymentBlockHash)

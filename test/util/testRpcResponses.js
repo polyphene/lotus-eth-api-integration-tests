@@ -13,4 +13,22 @@ const testGetTransactionByHash = (txByHash, deployerF0Addr) => {
   should.not.exist(txByHash.to)
 }
 
-module.exports = { testGetTransactionByHash }
+const testGetTransactionReceipt = (txReceipt) => {
+  txReceipt.should.contain.keys(
+    'blockHash',
+    'blockNumber',
+    'from',
+    'cumulativeGasUsed',
+    'gasUsed',
+    'logs',
+    'logsBloom',
+    'transactionHash',
+    'transactionIndex',
+    'effectiveGasPrice',
+  )
+  txReceipt.gasUsed.should.be.gt(0)
+  txReceipt.cumulativeGasUsed.should.be.gt(txReceipt.gasUsed)
+  txReceipt.status.should.equal(1)
+}
+
+module.exports = { testGetTransactionByHash, testGetTransactionReceipt }

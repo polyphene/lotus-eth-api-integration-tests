@@ -7,7 +7,7 @@ const { promisify } = require('util')
 const rpcTests = require('../util/testRpcResponses')
 
 let deployerF0Addr, deploymentTxHash, pendingContract, deploymentBlockHash,
-  deploymentBlockNumber
+  deploymentBlockNumber, simpleCoinAddress
 
 describe('SimpleCoin', function () {
   it('Should send deployment transaction', async function () {
@@ -35,5 +35,13 @@ describe('SimpleCoin', function () {
       deploymentBlockNumber = blockNumber
 
       rpcTests.testGetTransactionByHash(txByHash, deployerF0Addr)
+    })
+  it('Should access transaction receipt after it has been mined',
+    async function () {
+      const txReceipt = await promisify(web3.eth.getTransactionReceipt)(
+        deploymentTxHash)
+      simpleCoinAddress = txReceipt.contractAddress
+
+      rpcTests.testGetTransactionReceipt(txReceipt)
     })
 })
