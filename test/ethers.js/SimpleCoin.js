@@ -74,31 +74,7 @@ describe('SimpleCoin', function () {
     const blockByHash = await ethers.provider.getBlock(deploymentBlockHash)
     const blockByNumber = await ethers.provider.getBlock(deploymentBlockNumber);
 
-    [blockByHash, blockByNumber].forEach(bloc => {
-      bloc.should.contain.keys(
-        'parentHash',
-        'sha3Uncles',
-        'miner',
-        'stateRoot',
-        'transactionsRoot',
-        'receiptsRoot',
-        'logsBloom',
-        'number',
-        'gasLimit',
-        'gasUsed',
-        'timestamp',
-        'extraData',
-        'mixHash',
-        'nonce',
-        'size',
-        'transactions',
-        'uncles',
-      )
-      bloc.gasUsed.should.be.gt(0)
-      bloc.transactions.length.should.not.be.empty
-      bloc.transactions.should.contain(deploymentTxHash)
-    })
-
+    [blockByHash, blockByNumber].forEach(b => {rpcTests.testGetBlock(b, deploymentTxHash)})
     blockByHash.should.deep.equal(blockByNumber)
   })
   it('Should get block tx count', async function () {

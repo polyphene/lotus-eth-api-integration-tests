@@ -44,4 +44,13 @@ describe('SimpleCoin', function () {
 
       rpcTests.testGetTransactionReceipt(txReceipt)
     })
+  it('Should find the transaction in block tx list', async function () {
+    const blockByHash = await promisify(web3.eth.getBlock)(
+      deploymentBlockHash)
+    const blockByNumber = await promisify(web3.eth.getBlock)(
+      deploymentBlockNumber);
+
+    [blockByHash, blockByNumber].forEach(b => {rpcTests.testGetBlock(b, deploymentTxHash)})
+    blockByHash.should.deep.equal(blockByNumber)
+  })
 })

@@ -31,4 +31,29 @@ const testGetTransactionReceipt = (txReceipt) => {
   txReceipt.status.should.equal(1)
 }
 
-module.exports = { testGetTransactionByHash, testGetTransactionReceipt }
+const testGetBlock = (block, deploymentTxHash) => {
+  block.should.contain.keys(
+    'parentHash',
+    'sha3Uncles',
+    'miner',
+    'stateRoot',
+    'transactionsRoot',
+    'receiptsRoot',
+    'logsBloom',
+    'number',
+    'gasLimit',
+    'gasUsed',
+    'timestamp',
+    'extraData',
+    'mixHash',
+    'nonce',
+    'size',
+    'transactions',
+    'uncles',
+  )
+  block.gasUsed.should.be.gt(0)
+  block.transactions.length.should.not.be.empty
+  block.transactions.should.contain(deploymentTxHash)
+}
+
+module.exports = { testGetTransactionByHash, testGetTransactionReceipt, testGetBlock }
