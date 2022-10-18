@@ -27,8 +27,8 @@ And run the test suites:
 ```shell
 # run all tests
 npx hardhat test
-# or run only the SimpleCoin test suite
-npx hardhat test test/SimpleCoin.js
+# or run only the SimpleCoin test suite with ethers.js
+npx hardhat test test/ethers.js/SimpleCoin.js
 ```
 
 ## Contributing
