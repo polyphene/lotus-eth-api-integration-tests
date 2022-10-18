@@ -1,11 +1,10 @@
 require('dotenv').config()
 const { artifacts, ethers } = require('hardhat')
 const deployContract = require('./utils/deployContract')
-const { getDeployerF1Address, getDeployerF0Address } = require(
+const { getDeployerF0Address } = require(
   './utils/getDeployerAddresses')
 const rpcTests = require('../util/testRpcResponses')
-const { mappingStoragePositionFromKey } = require('../util/utils')
-const should = require('chai').should()
+const { mappingStoragePositionFromKey, getDeployerF1Address } = require('../util/utils')
 
 let deployerF0Addr, deploymentTxHash, deploymentBlockHash,
   deploymentBlockNumber, simpleCoinAddress
@@ -24,27 +23,14 @@ describe('SimpleCoin', function () {
     async function () {
       const txByHash = await ethers.provider.getTransaction(deploymentTxHash)
 
-      txByHash.should.contain.keys(
-        'blockHash',
-        'blockNumber',
-        'from',
-        'hash',
-        'transactionIndex',
-      )
-      txByHash.from.should.be.a.properAddress
-      txByHash.from.should.hexEqual(deployerF0Addr)
-      should.not.exist(txByHash.blockHash)
-      should.not.exist(txByHash.blockNumber)
-      should.not.exist(txByHash.transactionIndex)
-      should.not.exist(txByHash.to)
+      rpcTests.testGetPendingTransactionByHash(txByHash, deployerF0Addr)
     })
   it('Should access null transaction receipt before it has been mined',
     async function () {
       const txReceipt = await ethers.provider.getTransactionReceipt(
         deploymentTxHash)
 
-      // eth_getTransactionReceipt returns null for both pending and unknown transactions
-      should.not.exist(txReceipt)
+      rpcTests.testGetPendingTransactionReceipt(txReceipt)
     })
   it('Should successfully deploy', async function () {
     const tx = await ethers.provider.getTransaction(deploymentTxHash)
@@ -61,7 +47,7 @@ describe('SimpleCoin', function () {
       deploymentBlockHash = blockHash
       deploymentBlockNumber = blockNumber
 
-      rpcTests.testGetTransactionByHash(txByHash, deployerF0Addr)
+      rpcTests.testGetMinedTransactionByHash(txByHash, deployerF0Addr)
     })
   it('Should access transaction receipt after it has been mined',
     async function () {
@@ -69,7 +55,7 @@ describe('SimpleCoin', function () {
         deploymentTxHash)
       simpleCoinAddress = txReceipt.contractAddress
 
-      rpcTests.testGetTransactionReceipt(txReceipt)
+      rpcTests.testGetMinedTransactionReceipt(txReceipt)
     })
   it('Should find the transaction in block tx list', async function () {
     const blockByHash = await ethers.provider.getBlock(deploymentBlockHash)

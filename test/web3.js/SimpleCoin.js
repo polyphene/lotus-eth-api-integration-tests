@@ -1,10 +1,10 @@
 require('dotenv').config()
-const { getDeployerF1Address, getDeployerF0Address } = require(
+const { getDeployerF0Address } = require(
   './utils/getDeployerAddresses')
 const deployContract = require('./utils/deployContract')
 const { artifacts, web3 } = require('hardhat')
 const rpcTests = require('../util/testRpcResponses')
-const { mappingStoragePositionFromKey } = require('../util/utils')
+const { mappingStoragePositionFromKey, getDeployerF1Address } = require('../util/utils')
 
 let deployerF0Addr, deploymentTxHash, simpleCoin, deploymentBlockHash,
   deploymentBlockNumber, simpleCoinAddress
@@ -20,6 +20,18 @@ describe('SimpleCoin', function () {
     const f1Addr = getDeployerF1Address()
     deployerF0Addr = await getDeployerF0Address(f1Addr)
   })
+  it('Should access transaction details before it has been mined',
+    async function () {
+      const txByHash = await web3.eth.getTransaction(deploymentTxHash)
+
+      rpcTests.testGetPendingTransactionByHash(txByHash, deployerF0Addr)
+    })
+  it('Should access null transaction receipt before it has been mined',
+    async function () {
+      const txReceipt = await web3.eth.getTransactionReceipt(deploymentTxHash)
+
+      rpcTests.testGetPendingTransactionReceipt(txReceipt)
+    })
   it('Should successfully deploy', async function () {
     await pendingContract
   })
@@ -34,14 +46,14 @@ describe('SimpleCoin', function () {
       deploymentBlockHash = blockHash
       deploymentBlockNumber = blockNumber
 
-      rpcTests.testGetTransactionByHash(txByHash, deployerF0Addr)
+      rpcTests.testGetMinedTransactionByHash(txByHash, deployerF0Addr)
     })
   it('Should access transaction receipt after it has been mined',
     async function () {
       const txReceipt = await web3.eth.getTransactionReceipt(deploymentTxHash)
       simpleCoinAddress = txReceipt.contractAddress
 
-      rpcTests.testGetTransactionReceipt(txReceipt)
+      rpcTests.testGetMinedTransactionReceipt(txReceipt)
     })
   it('Should find the transaction in block tx list', async function () {
     const blockByHash = await web3.eth.getBlock(deploymentBlockHash)

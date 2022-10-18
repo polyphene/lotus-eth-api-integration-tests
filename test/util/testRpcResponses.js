@@ -1,6 +1,27 @@
 const should = require('chai').should()
 
-const testGetTransactionByHash = (txByHash, deployerF0Addr) => {
+const testGetPendingTransactionByHash = (txByHash, deployerF0Addr) => {
+  txByHash.should.contain.keys(
+    'blockHash',
+    'blockNumber',
+    'from',
+    'hash',
+    'transactionIndex',
+  )
+  txByHash.from.should.be.a.properAddress
+  txByHash.from.should.hexEqual(deployerF0Addr)
+  should.not.exist(txByHash.blockHash)
+  should.not.exist(txByHash.blockNumber)
+  should.not.exist(txByHash.transactionIndex)
+  should.not.exist(txByHash.to)
+}
+
+const testGetPendingTransactionReceipt = (txReceipt) => {
+  // eth_getTransactionReceipt returns null for both pending and unknown transactions
+  should.not.exist(txReceipt)
+}
+
+const testGetMinedTransactionByHash = (txByHash, deployerF0Addr) => {
   txByHash.should.contain.keys(
     'blockHash',
     'blockNumber',
@@ -13,7 +34,7 @@ const testGetTransactionByHash = (txByHash, deployerF0Addr) => {
   should.not.exist(txByHash.to)
 }
 
-const testGetTransactionReceipt = (txReceipt) => {
+const testGetMinedTransactionReceipt = (txReceipt) => {
   txReceipt.should.contain.keys(
     'blockHash',
     'blockNumber',
@@ -75,8 +96,10 @@ const testGetStorageAt = (storageAtDeployerBalance, storageAtOtherBalance) => {
 }
 
 module.exports = {
-  testGetTransactionByHash,
-  testGetTransactionReceipt,
+  testGetPendingTransactionByHash,
+  testGetPendingTransactionReceipt,
+  testGetMinedTransactionByHash,
+  testGetMinedTransactionReceipt,
   testGetBlock,
   testGetBlockTxCount,
   testCall,

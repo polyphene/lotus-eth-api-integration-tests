@@ -1,6 +1,6 @@
 const { artifacts, web3 } = require('hardhat')
-const { getDeployerF1Address } = require('./getDeployerAddresses')
 const { promisify } = require('util')
+const { getDeployerF1Address } = require('../../util/utils')
 
 const deployContract = async (contractName, ...args) => {
   const f1Addr = getDeployerF1Address()
