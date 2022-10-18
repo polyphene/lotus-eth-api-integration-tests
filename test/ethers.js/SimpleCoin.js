@@ -84,10 +84,7 @@ describe('SimpleCoin', function () {
       'eth_getBlockTransactionCountByNumber',
       [ethers.utils.hexlify(deploymentBlockNumber)]);
 
-    [blockTxCountByHash, blockTxCountByNumber].forEach(blockTxCount => {
-      Number(blockTxCount).should.be.gt(0)
-    })
-
+    [blockTxCountByHash, blockTxCountByNumber].forEach(rpcTests.testGetBlockTxCount)
     blockTxCountByHash.should.be.equal(blockTxCountByNumber)
   })
   it('Should interact with the contract using eth_call', async function () {

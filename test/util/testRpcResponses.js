@@ -56,4 +56,13 @@ const testGetBlock = (block, deploymentTxHash) => {
   block.transactions.should.contain(deploymentTxHash)
 }
 
-module.exports = { testGetTransactionByHash, testGetTransactionReceipt, testGetBlock }
+const testGetBlockTxCount = (blockTxCount) => {
+  Number(blockTxCount).should.be.gt(0)
+}
+
+module.exports = {
+  testGetTransactionByHash,
+  testGetTransactionReceipt,
+  testGetBlock,
+  testGetBlockTxCount,
+}

@@ -53,4 +53,13 @@ describe('SimpleCoin', function () {
     [blockByHash, blockByNumber].forEach(b => {rpcTests.testGetBlock(b, deploymentTxHash)})
     blockByHash.should.deep.equal(blockByNumber)
   })
+  it('Should get block tx count', async function () {
+    const blockTxCountByHash = await promisify(web3.eth.getBlockTransactionCount)(
+      deploymentBlockHash)
+    const blockTxCountByNumber = await promisify(web3.eth.getBlockTransactionCount)(
+      deploymentBlockNumber);
+
+    [blockTxCountByHash, blockTxCountByNumber].forEach(rpcTests.testGetBlockTxCount)
+    blockTxCountByHash.should.be.equal(blockTxCountByNumber)
+  })
 })
