@@ -60,9 +60,15 @@ const testGetBlockTxCount = (blockTxCount) => {
   Number(blockTxCount).should.be.gt(0)
 }
 
+const testCall = (deployerBalance, receiverBalance) => {
+  deployerBalance.should.be.equal(10000)
+  receiverBalance.should.be.equal(0)
+}
+
 module.exports = {
   testGetTransactionByHash,
   testGetTransactionReceipt,
   testGetBlock,
   testGetBlockTxCount,
+  testCall,
 }

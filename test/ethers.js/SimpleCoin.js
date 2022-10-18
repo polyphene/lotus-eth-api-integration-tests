@@ -93,8 +93,7 @@ describe('SimpleCoin', function () {
     const deployerBalance = await SimpleCoin.getBalance(deployerF0Addr)
     const receiverBalance = await SimpleCoin.getBalance(otherAddress)
 
-    deployerBalance.should.be.equal(10000)
-    receiverBalance.should.be.equal(0)
+    rpcTests.testCall(deployerBalance, receiverBalance)
   })
   it('Should get the contract byte code at the deployed address',
     async function () {
