@@ -2,5 +2,4 @@
 .idea
 artifacts
 cache
-deployments
 node_modules

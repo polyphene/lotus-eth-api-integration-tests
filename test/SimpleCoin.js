@@ -1,50 +1,22 @@
 require('dotenv').config()
-const fa = require('@glif/filecoin-address')
 const { artifacts, ethers } = require('hardhat')
+const deployContract = require('./utils/deployContract')
+const { getDeployerF1Address, getDeployerF0Address } = require(
+  './utils/getDeployerAddresses')
 const should = require('chai').should()
 
-const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY
 let deployerF0Addr, deploymentTxHash, deploymentBlockHash,
   deploymentBlockNumber, simpleCoinAddress
 const otherAddress = '0xff000000000000000000000000000000deadbeef'
 
 describe('SimpleCoin', function () {
   it('Should send deployment transaction', async function () {
-    // use the deployer private key to compute the Filecoin f1 deployer address
-    // and get the right tx nonce
-    const deployer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY)
-    const pubKey = ethers.utils.arrayify(deployer.publicKey)
-    const f1Addr = fa.newSecp256k1Address(pubKey).toString()
-
-    try {
-      // check that an actor has been deployed at the deployer address
-      let actorId = await ethers.provider.send('Filecoin.StateLookupID',
-        [f1Addr, []])
-      // format the deployer f0 address
-      actorId = ethers.utils.hexValue(Number(actorId.slice(1)))
-      deployerF0Addr = ethers.utils.hexConcat(
-        ['0xff', ethers.utils.hexZeroPad(actorId, 19)])
-    } catch (e) {
-      console.error(
-        `failed to resolve address ${f1Addr}. be sure to deploy an actor by sending FIL there`)
-      return
-    }
-
-    const maxPriorityFeePerGas = await ethers.provider.send(
-      'eth_maxPriorityFeePerGas', [])
-    const nonce = await ethers.provider.send('Filecoin.MpoolGetNonce',
-      [f1Addr])
-
-    // create a contract factory
-    const SimpleCoin = await ethers.getContractFactory('SimpleCoin')
-    // send a deployment transaction, without waiting for the transaction to be mined
-    const simpleCoin = await SimpleCoin.deploy({
-      gasLimit: 1000000000,
-      maxPriorityFeePerGas,
-      nonce,
-    })
+    const simpleCoin = await deployContract('SimpleCoin')
 
     deploymentTxHash = simpleCoin.deployTransaction.hash
+
+    const f1Addr = getDeployerF1Address()
+    deployerF0Addr = await getDeployerF0Address(f1Addr)
   })
   it('Should access transaction details before it has been mined',
     async function () {
