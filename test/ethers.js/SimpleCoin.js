@@ -4,6 +4,7 @@ const deployContract = require('./utils/deployContract')
 const { getDeployerF1Address, getDeployerF0Address } = require(
   './utils/getDeployerAddresses')
 const rpcTests = require('../util/testRpcResponses')
+const { mappingStoragePositionFromKey } = require('../util/utils')
 const should = require('chai').should()
 
 let deployerF0Addr, deploymentTxHash, deploymentBlockHash,
@@ -108,26 +109,18 @@ describe('SimpleCoin', function () {
     const SimpleCoin = await ethers.getContractAt('SimpleCoin',
       simpleCoinAddress)
 
-    let key = ethers.utils.hexConcat([
-      ethers.utils.hexZeroPad(deployerF0Addr, 32),
-      ethers.utils.hexZeroPad('0x00', 32),
-    ])
-    let position = ethers.utils.keccak256(key)
+    let position = mappingStoragePositionFromKey(0, deployerF0Addr)
     const storageAtDeployerBalance = await ethers.provider.getStorageAt(
       SimpleCoin.address,
       position)
 
     storageAtDeployerBalance.should.be.equal(10000)
 
-    key = ethers.utils.hexConcat([
-      ethers.utils.hexZeroPad(otherAddress, 32),
-      ethers.utils.hexZeroPad('0x00', 32),
-    ])
-    position = ethers.utils.keccak256(key)
+    position = mappingStoragePositionFromKey(0, otherAddress)
     const storageAtOtherBalance = await ethers.provider.getStorageAt(
       SimpleCoin.address,
       position)
 
-    storageAtOtherBalance.should.be.equal(0)
+    rpcTests.testGetStorageAt(storageAtDeployerBalance, storageAtOtherBalance)
   })
 })

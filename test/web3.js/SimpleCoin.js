@@ -4,6 +4,7 @@ const { getDeployerF1Address, getDeployerF0Address } = require(
 const deployContract = require('./utils/deployContract')
 const { artifacts, web3 } = require('hardhat')
 const rpcTests = require('../util/testRpcResponses')
+const { mappingStoragePositionFromKey } = require('../util/utils')
 
 let deployerF0Addr, deploymentTxHash, simpleCoin, deploymentBlockHash,
   deploymentBlockNumber, simpleCoinAddress
@@ -75,4 +76,17 @@ describe('SimpleCoin', function () {
 
       rpcTests.testGetCode(code, deployedBytecode)
     })
+  it('Should get storage using eth_getStorageAt', async function () {
+    let position = mappingStoragePositionFromKey(0, deployerF0Addr)
+    const storageAtDeployerBalance = await web3.eth.getStorageAt(
+      simpleCoinAddress,
+      position)
+
+    position = mappingStoragePositionFromKey(0, otherAddress)
+    const storageAtOtherBalance = await web3.eth.getStorageAt(
+      simpleCoinAddress,
+      position)
+
+    rpcTests.testGetStorageAt(storageAtDeployerBalance, storageAtOtherBalance)
+  })
 })

@@ -69,6 +69,11 @@ const testGetCode = (code, expectedCode) => {
   code.should.be.equal(expectedCode)
 }
 
+const testGetStorageAt = (storageAtDeployerBalance, storageAtOtherBalance) => {
+  storageAtDeployerBalance.should.be.equal(10000)
+  storageAtOtherBalance.should.be.equal(0)
+}
+
 module.exports = {
   testGetTransactionByHash,
   testGetTransactionReceipt,
@@ -76,4 +81,5 @@ module.exports = {
   testGetBlockTxCount,
   testCall,
   testGetCode,
+  testGetStorageAt,
 }

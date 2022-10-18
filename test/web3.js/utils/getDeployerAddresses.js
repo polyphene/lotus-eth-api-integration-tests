@@ -1,16 +1,6 @@
-require('dotenv').config()
-const fa = require('@glif/filecoin-address')
 const { promisify } = require('util')
-const { ethers, web3 } = require('hardhat') // TODO remove ethers
-
-const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY
-
-const getDeployerF1Address = () => {
-  // use the deployer private key to compute the Filecoin f1 deployer address
-  const deployer = new ethers.Wallet(DEPLOYER_PRIVATE_KEY)
-  const pubKey = ethers.utils.arrayify(deployer.publicKey)
-  return fa.newSecp256k1Address(pubKey).toString()
-}
+const { web3 } = require('hardhat')
+const { actorIdToF0Address } = require('../../util/utils')
 
 const getDeployerF0Address = async (f1Addr) => {
   try {
@@ -22,9 +12,8 @@ const getDeployerF0Address = async (f1Addr) => {
       id: new Date().getTime(),
     })
     const { result } = resp
-    const actorId = ethers.utils.hexValue(Number(result.slice(1)))
-    return ethers.utils.hexConcat(
-      ['0xff', ethers.utils.hexZeroPad(actorId, 19)])
+    // format the deployer f0 address
+    return actorIdToF0Address(result)
   } catch (e) {
     console.error(
       `failed to resolve address ${f1Addr}. be sure to deploy an actor by sending FIL there`)
@@ -32,6 +21,5 @@ const getDeployerF0Address = async (f1Addr) => {
 }
 
 module.exports = {
-  getDeployerF1Address,
   getDeployerF0Address,
 }
