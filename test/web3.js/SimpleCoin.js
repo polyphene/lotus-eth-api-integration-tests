@@ -4,7 +4,7 @@ const { getDeployerF1Address, getDeployerF0Address } = require(
 const deployContract = require('./utils/deployContract')
 const { web3 } = require('hardhat')
 const { promisify } = require('util')
-const should = require('chai').should()
+const rpcTests = require('../util/testRpcResponses')
 
 let deployerF0Addr, deploymentTxHash, pendingContract, deploymentBlockHash,
   deploymentBlockNumber
@@ -26,6 +26,7 @@ describe('SimpleCoin', function () {
     async function () {
       const txByHash = await promisify(web3.eth.getTransaction)(
         deploymentTxHash)
+
       const {
         blockHash,
         blockNumber,
@@ -33,15 +34,6 @@ describe('SimpleCoin', function () {
       deploymentBlockHash = blockHash
       deploymentBlockNumber = blockNumber
 
-      txByHash.should.contain.keys(
-        'blockHash',
-        'blockNumber',
-        'from',
-        'hash',
-        'transactionIndex',
-      )
-      txByHash.from.should.be.a.properAddress
-      txByHash.from.should.hexEqual(deployerF0Addr)
-      should.not.exist(txByHash.to)
+      rpcTests.testGetTransactionByHash(txByHash, deployerF0Addr)
     })
 })

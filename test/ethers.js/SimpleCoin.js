@@ -3,6 +3,7 @@ const { artifacts, ethers } = require('hardhat')
 const deployContract = require('./utils/deployContract')
 const { getDeployerF1Address, getDeployerF0Address } = require(
   './utils/getDeployerAddresses')
+const rpcTests = require('../util/testRpcResponses')
 const should = require('chai').should()
 
 let deployerF0Addr, deploymentTxHash, deploymentBlockHash,
@@ -51,6 +52,7 @@ describe('SimpleCoin', function () {
   it('Should access transaction details after it has been mined',
     async function () {
       const txByHash = await ethers.provider.getTransaction(deploymentTxHash)
+
       const {
         blockHash,
         blockNumber,
@@ -58,16 +60,7 @@ describe('SimpleCoin', function () {
       deploymentBlockHash = blockHash
       deploymentBlockNumber = blockNumber
 
-      txByHash.should.contain.keys(
-        'blockHash',
-        'blockNumber',
-        'from',
-        'hash',
-        'transactionIndex',
-      )
-      txByHash.from.should.be.a.properAddress
-      txByHash.from.should.hexEqual(deployerF0Addr)
-      should.not.exist(txByHash.to)
+      rpcTests.testGetTransactionByHash(txByHash, deployerF0Addr)
     })
   it('Should access transaction receipt after it has been mined',
     async function () {
