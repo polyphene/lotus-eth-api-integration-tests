@@ -22,12 +22,6 @@ Compile smart contracts:
 npx hardhat compile
 ```
 
-Deploy them:
-
-```shell
-npx hardhat deploy
-```
-
 And run the test suites:
 
 ```shell
@@ -36,17 +30,11 @@ npx hardhat test
 
 ## Contributing
 
-This project follows the default structure of a `hardhat` / `hardhat-deploy` project,
+This project follows the default structure of a `hardhat` project,
 basically made of:
-contracts/
-deploy/
-test/
-hardhat.config.js
-These are the default paths for a Hardhat project.
 
     hardhat.config.js the hardhat configuration file.
     contracts/ where the sources of smart contracts should be.
-    deploy/ where deployment scripts should go.
     test/ where test scripts should go.
 
 ## License
