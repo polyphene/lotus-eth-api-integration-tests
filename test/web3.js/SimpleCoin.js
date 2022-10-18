@@ -33,7 +33,7 @@ describe('SimpleCoin', function () {
       rpcTests.testGetPendingTransactionReceipt(txReceipt)
     })
   it('Should successfully deploy', async function () {
-    await pendingContract
+    await simpleCoin
   })
   it('Should access transaction details after it has been mined',
     async function () {
