@@ -1,6 +1,8 @@
 require('chai').should()
 const { ethers } = require('hardhat')
 const deployContract = require('./utils/deployContract')
+const { getDeployerF0Address } = require('./utils/getDeployerAddresses')
+const { getDeployerF1Address } = require('../util/utils')
 
 const TOKEN_NAME = 'my_token'
 const TOKEN_SYMBOL = 'TKN'
@@ -10,6 +12,8 @@ let deployerF0Addr, deploymentTxHash, erc20Address
 
 describe('ERC20', function () {
   it('Should successfully deploy', async function () {
+    const deployerF1Addr = getDeployerF1Address()
+    deployerF0Addr = await getDeployerF0Address(deployerF1Addr)
     const erc20 = await deployContract('ERC20PresetFixedSupply',
       TOKEN_NAME, TOKEN_SYMBOL, TOKEN_INITIAL_SUPPLY, deployerF0Addr)
 
