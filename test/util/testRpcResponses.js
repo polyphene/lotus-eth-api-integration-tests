@@ -73,7 +73,7 @@ const testGetBlock = (block, deploymentTxHash) => {
     'uncles',
   )
   block.gasUsed.should.be.gt(0)
-  block.transactions.length.should.not.be.empty
+  block.transactions.should.not.be.empty
   block.transactions.should.contain(deploymentTxHash)
 }
 
