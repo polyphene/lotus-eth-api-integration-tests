@@ -67,9 +67,10 @@ describe('SimpleCoin', function () {
   it('Should get block tx count', async function () {
     const blockTxCountByHash = await ethers.provider.send(
       'eth_getBlockTransactionCountByHash', [deploymentBlockHash])
+    const hexBlockNumber = ethers.utils.hexValue(ethers.BigNumber.from(deploymentBlockNumber));
     const blockTxCountByNumber = await ethers.provider.send(
       'eth_getBlockTransactionCountByNumber',
-      [ethers.utils.hexlify(deploymentBlockNumber)]);
+      [hexBlockNumber]);
 
     [blockTxCountByHash, blockTxCountByNumber].forEach(rpcTests.testGetBlockTxCount)
     blockTxCountByHash.should.be.equal(blockTxCountByNumber)
