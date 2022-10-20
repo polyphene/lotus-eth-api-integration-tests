@@ -34,7 +34,7 @@ const testGetMinedTransactionByHash = (txByHash, deployerF0Addr) => {
   should.not.exist(txByHash.to)
 }
 
-const testGetMinedTransactionReceipt = (txReceipt) => {
+const testGetMinedTransactionReceipt = (txReceipt, isWeb3Js) => {
   txReceipt.should.contain.keys(
     'blockHash',
     'blockNumber',
@@ -48,8 +48,12 @@ const testGetMinedTransactionReceipt = (txReceipt) => {
     'effectiveGasPrice',
   )
   txReceipt.gasUsed.should.be.gt(0)
-  txReceipt.cumulativeGasUsed.should.be.gt(txReceipt.gasUsed)
-  txReceipt.status.should.equal(1)
+  txReceipt.cumulativeGasUsed.should.be.gte(txReceipt.gasUsed)
+  let { status } = txReceipt;
+  if (isWeb3Js) {
+    status = status ? 1 : 0
+  }
+  status.should.equal(1)
 }
 
 const testGetBlock = (block, deploymentTxHash) => {
@@ -73,7 +77,7 @@ const testGetBlock = (block, deploymentTxHash) => {
     'uncles',
   )
   block.gasUsed.should.be.gt(0)
-  block.transactions.length.should.not.be.empty
+  block.transactions.should.not.be.empty
   block.transactions.should.contain(deploymentTxHash)
 }
 
@@ -91,8 +95,8 @@ const testGetCode = (code, expectedCode) => {
 }
 
 const testGetStorageAt = (storageAtDeployerBalance, storageAtOtherBalance) => {
-  storageAtDeployerBalance.should.be.equal(10000)
-  storageAtOtherBalance.should.be.equal(0)
+  storageAtDeployerBalance.should.be.equal('0x0000000000000000000000000000000000000000000000000000000000002710')
+  storageAtOtherBalance.should.be.equal('0x0000000000000000000000000000000000000000000000000000000000000000')
 }
 
 module.exports = {
