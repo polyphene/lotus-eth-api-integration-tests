@@ -16,9 +16,7 @@ describe('ERC20', function () {
     const { contract } = await deployContract('ERC20PresetFixedSupply',
       TOKEN_NAME, TOKEN_SYMBOL, TOKEN_INITIAL_SUPPLY, deployerF0Addr)
 
-    erc20 = contract
-
-    await erc20
+    erc20 = await contract
   })
   it('Should set the right name', async function () {
     const name = await erc20.methods.name().call()
