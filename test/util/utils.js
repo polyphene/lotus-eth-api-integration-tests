@@ -1,8 +1,18 @@
 require('dotenv').config()
 const fa = require('@glif/filecoin-address')
+const { ethers } = require('hardhat')
 const { utils, BigNumber, Wallet } = require('hardhat').ethers
 
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY
+
+const isFilecoinNetwork = async () => {
+  try {
+    await ethers.provider.send('Filecoin.Version', [])
+    return true
+  } catch (e) {
+    return false
+  }
+}
 
 const getDeployerF1Address = () => {
   // use the deployer private key to compute the Filecoin f1 deployer address
@@ -18,7 +28,6 @@ const actorIdToF0Address = (actorIdStr) => {
 }
 
 const mappingStoragePositionFromKey = (mapPosition, mapKey) => {
-
   let key = utils.hexConcat([
     utils.hexZeroPad(mapKey, 32),
     utils.hexZeroPad(BigNumber.from(mapPosition).toHexString(), 32),
@@ -27,6 +36,7 @@ const mappingStoragePositionFromKey = (mapPosition, mapKey) => {
 }
 
 module.exports = {
+  isFilecoinNetwork,
   getDeployerF1Address,
   actorIdToF0Address,
   mappingStoragePositionFromKey,

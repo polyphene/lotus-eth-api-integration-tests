@@ -1,7 +1,7 @@
 require('dotenv').config()
 require('@nomiclabs/hardhat-ethers')
-require("@nomiclabs/hardhat-web3");
-require("@nomicfoundation/hardhat-chai-matchers");
+require('@nomiclabs/hardhat-web3')
+require('@nomicfoundation/hardhat-chai-matchers')
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -18,6 +18,17 @@ module.exports = {
         'Content-Type': 'application/json',
       },
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
+    },
+    hardhat: {
+      mining: {
+        auto: false,
+        interval: 1000,
+      },
+      accounts: [
+        {
+          privateKey: process.env.DEPLOYER_PRIVATE_KEY,
+          balance: "1000000000000000000",
+        }],
     },
   },
 }
