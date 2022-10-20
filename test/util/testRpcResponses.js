@@ -91,8 +91,8 @@ const testGetCode = (code, expectedCode) => {
 }
 
 const testGetStorageAt = (storageAtDeployerBalance, storageAtOtherBalance) => {
-  storageAtDeployerBalance.should.be.equal(10000)
-  storageAtOtherBalance.should.be.equal(0)
+  storageAtDeployerBalance.should.be.equal('0x0000000000000000000000000000000000000000000000000000000000002710')
+  storageAtOtherBalance.should.be.equal('0x0000000000000000000000000000000000000000000000000000000000000000')
 }
 
 module.exports = {
