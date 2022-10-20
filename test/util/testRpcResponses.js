@@ -34,7 +34,7 @@ const testGetMinedTransactionByHash = (txByHash, deployerF0Addr) => {
   should.not.exist(txByHash.to)
 }
 
-const testGetMinedTransactionReceipt = (txReceipt) => {
+const testGetMinedTransactionReceipt = (txReceipt, isWeb3Js) => {
   txReceipt.should.contain.keys(
     'blockHash',
     'blockNumber',
@@ -49,7 +49,11 @@ const testGetMinedTransactionReceipt = (txReceipt) => {
   )
   txReceipt.gasUsed.should.be.gt(0)
   txReceipt.cumulativeGasUsed.should.be.gte(txReceipt.gasUsed)
-  txReceipt.status.should.equal(1)
+  let { status } = txReceipt;
+  if (isWeb3Js) {
+    status = status ? 1 : 0
+  }
+  status.should.equal(1)
 }
 
 const testGetBlock = (block, deploymentTxHash) => {

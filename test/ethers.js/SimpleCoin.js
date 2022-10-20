@@ -54,7 +54,7 @@ describe('SimpleCoin', function () {
         deploymentTxHash)
       simpleCoinAddress = txReceipt.contractAddress
 
-      rpcTests.testGetMinedTransactionReceipt(txReceipt)
+      rpcTests.testGetMinedTransactionReceipt(txReceipt, false)
     })
   it('Should find the transaction in block tx list', async function () {
     const blockByHash = await ethers.provider.getBlock(deploymentBlockHash)

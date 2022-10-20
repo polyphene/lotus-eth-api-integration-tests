@@ -1,20 +1,18 @@
 require('chai').should()
 const deployContract = require('./utils/deployContract')
-const { getDeployerF1Address } = require('../util/utils')
-const { getDeployerF0Address } = require('./utils/getDeployerAddresses')
+const { getDeployerAddress } = require('./utils/getDeployerAddresses')
 
 const TOKEN_NAME = 'my_token'
 const TOKEN_SYMBOL = 'TKN'
 const TOKEN_INITIAL_SUPPLY = 1000
 
-let deployerF0Addr, erc20
+let deployerAddr, erc20
 
 describe('ERC20', function () {
   it('Should successfully deploy', async function () {
-    const deployerF1Addr = getDeployerF1Address()
-    deployerF0Addr = await getDeployerF0Address(deployerF1Addr)
+    deployerAddr = await getDeployerAddress()
     const { contract } = await deployContract('ERC20PresetFixedSupply',
-      TOKEN_NAME, TOKEN_SYMBOL, TOKEN_INITIAL_SUPPLY, deployerF0Addr)
+      TOKEN_NAME, TOKEN_SYMBOL, TOKEN_INITIAL_SUPPLY, deployerAddr)
 
     erc20 = await contract
   })
@@ -29,7 +27,7 @@ describe('ERC20', function () {
     symbol.should.be.equal(TOKEN_SYMBOL)
   })
   it('Should set the right initial supply', async function () {
-    const ownerBalance = Number(await erc20.methods.balanceOf(deployerF0Addr).call())
+    const ownerBalance = Number(await erc20.methods.balanceOf(deployerAddr).call())
 
     ownerBalance.should.be.equal(TOKEN_INITIAL_SUPPLY)
   })
