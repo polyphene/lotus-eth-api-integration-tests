@@ -1,30 +1,28 @@
 require('dotenv').config()
-const { getDeployerF0Address } = require(
-  './utils/getDeployerAddresses')
 const deployContract = require('./utils/deployContract')
 const { artifacts, web3 } = require('hardhat')
 const rpcTests = require('../util/testRpcResponses')
-const { mappingStoragePositionFromKey, getDeployerF1Address } = require('../util/utils')
+const { mappingStoragePositionFromKey } = require('../util/utils')
+const { getDeployerAddress } = require('./utils/getDeployerAddresses')
 
-let deployerF0Addr, deploymentTxHash, simpleCoin, deploymentBlockHash,
-  deploymentBlockNumber, simpleCoinAddress
+let deployerAddr, deploymentTxHash, simpleCoin, simpleCoinDeployment,
+  deploymentBlockHash, deploymentBlockNumber, simpleCoinAddress
 const otherAddress = '0xff000000000000000000000000000000deadbeef'
 
 describe('SimpleCoin', function () {
   it('Should send deployment transaction', async function () {
     const { contract, txHash } = await deployContract('SimpleCoin')
 
-    simpleCoin = contract
+    simpleCoinDeployment = contract
     deploymentTxHash = txHash
 
-    const f1Addr = getDeployerF1Address()
-    deployerF0Addr = await getDeployerF0Address(f1Addr)
+    deployerAddr = await getDeployerAddress()
   })
   it('Should access transaction details before it has been mined',
     async function () {
       const txByHash = await web3.eth.getTransaction(deploymentTxHash)
 
-      rpcTests.testGetPendingTransactionByHash(txByHash, deployerF0Addr)
+      rpcTests.testGetPendingTransactionByHash(txByHash, deployerAddr)
     })
   it('Should access null transaction receipt before it has been mined',
     async function () {
@@ -33,7 +31,7 @@ describe('SimpleCoin', function () {
       rpcTests.testGetPendingTransactionReceipt(txReceipt)
     })
   it('Should successfully deploy', async function () {
-    await simpleCoin
+    simpleCoin = await simpleCoinDeployment
   })
   it('Should access transaction details after it has been mined',
     async function () {
@@ -46,14 +44,14 @@ describe('SimpleCoin', function () {
       deploymentBlockHash = blockHash
       deploymentBlockNumber = blockNumber
 
-      rpcTests.testGetMinedTransactionByHash(txByHash, deployerF0Addr)
+      rpcTests.testGetMinedTransactionByHash(txByHash, deployerAddr)
     })
   it('Should access transaction receipt after it has been mined',
     async function () {
       const txReceipt = await web3.eth.getTransactionReceipt(deploymentTxHash)
       simpleCoinAddress = txReceipt.contractAddress
 
-      rpcTests.testGetMinedTransactionReceipt(txReceipt)
+      rpcTests.testGetMinedTransactionReceipt(txReceipt, true)
     })
   it('Should find the transaction in block tx list', async function () {
     const blockByHash = await web3.eth.getBlock(deploymentBlockHash)
@@ -75,7 +73,7 @@ describe('SimpleCoin', function () {
   })
   it('Should interact with the contract using eth_call', async function () {
     const deployerBalance = Number(
-      await simpleCoin.methods.getBalance(deployerF0Addr).call())
+      await simpleCoin.methods.getBalance(deployerAddr).call())
     const receiverBalance = Number(
       await simpleCoin.methods.getBalance(otherAddress).call())
 
@@ -89,7 +87,7 @@ describe('SimpleCoin', function () {
       rpcTests.testGetCode(code, deployedBytecode)
     })
   it('Should get storage using eth_getStorageAt', async function () {
-    let position = mappingStoragePositionFromKey(0, deployerF0Addr)
+    let position = mappingStoragePositionFromKey(0, deployerAddr)
     const storageAtDeployerBalance = await web3.eth.getStorageAt(
       simpleCoinAddress,
       position)

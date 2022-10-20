@@ -1,6 +1,6 @@
 {
   "name": "lotus-eth-api-integration-tests",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Integration tests for the Ethereum JSON-RPC API in Lotus",
   "main": "index.js",
   "scripts": {
