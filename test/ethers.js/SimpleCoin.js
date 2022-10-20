@@ -101,8 +101,6 @@ describe('SimpleCoin', function () {
       SimpleCoin.address,
       position)
 
-    storageAtDeployerBalance.should.be.equal(10000)
-
     position = mappingStoragePositionFromKey(0, otherAddress)
     const storageAtOtherBalance = await ethers.provider.getStorageAt(
       SimpleCoin.address,
