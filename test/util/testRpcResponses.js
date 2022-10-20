@@ -48,7 +48,7 @@ const testGetMinedTransactionReceipt = (txReceipt) => {
     'effectiveGasPrice',
   )
   txReceipt.gasUsed.should.be.gt(0)
-  txReceipt.cumulativeGasUsed.should.be.gt(txReceipt.gasUsed)
+  txReceipt.cumulativeGasUsed.should.be.gte(txReceipt.gasUsed)
   txReceipt.status.should.equal(1)
 }
 
