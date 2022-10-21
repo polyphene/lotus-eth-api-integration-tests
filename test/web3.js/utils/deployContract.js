@@ -17,12 +17,14 @@ const deployContract = async (contractName, ...args) => {
   let options
   const from = (await web3.eth.getAccounts())[0]
   if (isFilecoin) {
-    const f1Addr = getDeployerF1Address()
-    const nonce = await sendRpcRequest('Filecoin.MpoolGetNonce', [f1Addr])
-    const maxPriorityFeePerGas = await sendRpcRequest('eth_maxPriorityFeePerGas.MpoolGetNonce', [])
+    const nonce = await sendRpcRequest("eth_getTransactionCount", [from]);
+    const maxPriorityFeePerGas = await sendRpcRequest(
+      "eth_maxPriorityFeePerGas",
+      []
+    );
     options = { from, nonce, maxPriorityFeePerGas, gasLimit: 1000000000 }
   } else {
-    const nonce = await sendRpcRequest('Filecoin.MpoolGetNonce', [from])
+    const nonce = await sendRpcRequest("eth_getTransactionCount", [from]);
     options = { from, nonce }
   }
 

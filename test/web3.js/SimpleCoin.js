@@ -7,7 +7,7 @@ const { getDeployerAddress } = require('./utils/getDeployerAddresses')
 
 let deployerAddr, deploymentTxHash, simpleCoin, simpleCoinDeployment,
   deploymentBlockHash, deploymentBlockNumber, simpleCoinAddress
-const otherAddress = '0xff000000000000000000000000000000deadbeef'
+const otherAddress = "0xb1C4ae9955eF3BDF24b029808e01Abb5B8bb12BE";
 
 describe('SimpleCoin', function () {
   it('Should send deployment transaction', async function () {
